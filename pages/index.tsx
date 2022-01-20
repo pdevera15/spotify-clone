@@ -1,12 +1,12 @@
 import type { NextPage } from "next"
+import Dastboard from "../components/Dashboard"
 import NavBar from "../components/NavBar"
-import { signIn, signOut, useSession } from "next-auth/react"
 
 const Home: NextPage = () => {
-  const { data, status } = useSession()
   return (
-    <div>
+    <div className="flex">
       <NavBar />
+      <Dastboard />
     </div>
   )
 }

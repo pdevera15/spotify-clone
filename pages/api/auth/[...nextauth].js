@@ -1,12 +1,13 @@
 import NextAuth from "next-auth"
 import Spotify from "next-auth/providers/spotify"
-
+import { loginUrl } from "../../../lib/spotify"
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     Spotify({
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
+      authorization: loginUrl,
     }),
     // ...add more providers here
   ],
