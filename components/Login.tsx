@@ -1,20 +1,9 @@
 import { signIn, signOut, useSession } from "next-auth/react"
-import { spotifyApi } from "../lib/spotify"
-import { useEffect } from "react"
-import * as url from "url"
-
-const Login = () => {
+import React, { useEffect } from "react"
+import { useSpotify } from "../lib/spotify"
+const Login = React.memo(function Login() {
   const { data, status } = useSession()
-  spotifyApi.setAccessToken(data?.accessToken)
-  useEffect(() => {
-    if (spotifyApi.getAccessToken())
-      spotifyApi
-        .getMyCurrentPlayingTrack()
-        .then(({ body }: any) => console.log(body))
-        .catch((e: any) => {
-          console.log(e)
-        })
-  }, [data])
+
   return (
     <>
       {data && status === "authenticated" ? (
@@ -32,5 +21,11 @@ const Login = () => {
       )}
     </>
   )
+})
+export async function getStaticProps() {
+  return {
+    props: { genres: ["test1", "test2"] },
+  }
 }
+
 export default Login

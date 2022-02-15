@@ -1,6 +1,27 @@
 import NextAuth from "next-auth"
 import Spotify from "next-auth/providers/spotify"
-import { loginUrl } from "../../../lib/spotify"
+import { loginUrl, spotifyApi } from "../../../lib/spotify"
+
+async function refreshAccessToken(token) {
+  try {
+    spotifyApi.setAccessToken(token.accessToken)
+    spotifyApi.setRefreshToken(token.refreshToken)
+
+    const { body: refreshedToken } = await spotifyApi.refreshAccessToken()
+    console.log("Refreshed Token is", refreshedToken)
+
+    return {
+      ...token,
+      accessToken: refreshedToken.access_token,
+      accessTokenExpires: Date.now + refreshedToken.expires_in * 1000,
+      refreshToken: refreshedToken.refresh_token ?? token.refreshToken,
+    }
+  } catch (error) {
+    console.error(error)
+
+    return { ...token, error: "RefreshAccessTokenError" }
+  }
+}
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
@@ -12,16 +33,33 @@ export default NextAuth({
     // ...add more providers here
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token
+      if (account && user) {
+        return {
+          ...token,
+          accessToken: account.access_token,
+          refreshToken: account.refresh_token,
+          username: account.providerAccountId,
+          accessTokenExpires: account.expires_at * 1000,
+        }
       }
-      return token
+
+      // Check if token is expired
+      if (Date.now() < token.accessTokenExpires) {
+        console.log("Token is valid")
+        return token
+      }
+
+      console.log("Token Expired")
+      return await refreshAccessToken(token)
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken
+      session.user.accessToken = token.accessToken
+      session.user.refreshToken = token.refreshToken
+      session.user.username = token.username
+      console.log(session)
       return session
     },
   },
