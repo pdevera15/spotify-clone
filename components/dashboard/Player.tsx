@@ -8,10 +8,45 @@ import {
   VolumeUpIcon,
   VolumeOffIcon,
 } from "@heroicons/react/solid"
+import { useEffect, useState } from "react"
+import { useSpotify } from "../../lib/spotify"
+import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
+import { useRecoilState, useRecoilValue } from "recoil"
 
 const Player = () => {
+  const spotifyApi = useSpotify()
+  const [playState, setPlayState] = useRecoilState(isPlayingState)
+  const currentTrackId = useRecoilValue(currentTrackIdState)
+  const [songCurrentTime, setSongCurrentTime] = useState<String>()
+  // useEffect(() => {
+  //   if (spotifyApi.getAccessToken()) {
+  //     spotifyApi
+  //       .play()
+  //       .then(() => console.log("Playback Started"))
+  //       .catch((err: any) => console.log("Error", err))
+  //   }
+  // }, [])
+
+  const playButtonHandler = (play: boolean) => {
+    spotifyApi
+      .getMyCurrentPlayingTrack()
+      .then(({ body }: any) => setSongCurrentTime(body.progress_ms))
+
+    if (!play) {
+      spotifyApi
+        .play({ uris: [currentTrackId], position_ms: songCurrentTime })
+        .then(() => console.log("Player Play"))
+        .catch((err: any) => console.error("Error", err))
+    } else {
+      spotifyApi
+        .pause()
+        .then(() => console.log("Player Pause"))
+        .catch((err: any) => console.error("Error", err))
+    }
+    setPlayState(!play)
+  }
   return (
-    <div className="flex flex-col gap-2 bg-white p-5 rounded-xl">
+    <div className="mt-5  flex flex-col gap-2 bg-white p-5 rounded-xl">
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
           <div className="rounded-xl bg-[#f4f5ff] p-1">
@@ -25,8 +60,19 @@ const Player = () => {
           <div className="rounded-xl bg-[#f4f5ff] p-1">
             <RewindIcon className="h-5 w-5" />
           </div>
+
           <div className="rounded-xl bg-[#f4f5ff] p-1">
-            <PauseIcon className="h-10 w-10" />
+            {playState ? (
+              <PauseIcon
+                className="h-10 w-10"
+                onClick={() => playButtonHandler(playState)}
+              />
+            ) : (
+              <PlayIcon
+                className="h-10 w-10"
+                onClick={() => playButtonHandler(playState)}
+              />
+            )}
           </div>
 
           <div className="rounded-xl bg-[#f4f5ff] p-1">
