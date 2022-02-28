@@ -1,4 +1,23 @@
+import { useEffect, useState } from "react"
+import { useSpotify } from "../../lib/spotify"
+
 const Trending = () => {
+  const spotifyApi = useSpotify()
+  const [trending, setTrending] = useState<any>({})
+  useEffect(() => {
+    console.log("Access Token", spotifyApi.getAccessToken())
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi
+        .getFeaturedPlaylists({
+          limit: 1,
+          country: "JP",
+        })
+        .then(({ body }: any) => {
+          setTrending(body)
+        })
+    }
+  }, [spotifyApi])
+  console.log(trending)
   return (
     <>
       <div>
@@ -8,12 +27,11 @@ const Trending = () => {
           <h1 className="text-sm text-slate-500">More</h1>
         </div>
       </div>
-      <div className="flex flex-col justify-center gap-3 w-full bg-white rounded-xl px-8 py-5 my-5">
+      <div
+        className={`flex flex-col justify-center gap-3 w-full bg-white rounded-xl px-8 py-5 my-5`}
+      >
         <span className="text-slate-400 text-sm">Artist</span>
-        <span className="text-4xl">
-          On Top <br />
-          Of The World
-        </span>
+        <span className="text-4xl"></span>
         <div className="flex justify-between">
           <div className="flex gap-3">
             <button className="bg-black text-white py-1 px-6 rounded-full">

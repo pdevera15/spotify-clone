@@ -3,6 +3,7 @@ import { useSpotify } from "../../lib/spotify"
 import { useRecoilValue, useRecoilState } from "recoil"
 import { selectedPlaylistState } from "../../atom/selectedPlaylistAtom"
 import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
+import toast from "react-hot-toast"
 
 const Playlist = ({ show, setShow }: any) => {
   const [playlistTracks, setPlaylistTracks] = useState<any>({})
@@ -40,12 +41,12 @@ const Playlist = ({ show, setShow }: any) => {
   const playSong = (id: any, uri: any) => {
     console.log(id, uri)
     setCurrentTrackId(uri)
-    setIsPlaying(true)
     if (spotifyApi.getAccessToken()) {
       spotifyApi
         .play({ uris: [uri] })
         .then(() => console.log("Song Play"))
-        .catch((error: Error) => console.error(error))
+        .then(() => setIsPlaying(true))
+        .catch((error: Error) => toast.error("No active devices found!"))
     }
   }
   const millisToMinutesAndSeconds = (millis: any) => {
@@ -63,10 +64,11 @@ const Playlist = ({ show, setShow }: any) => {
     }
     return sumartist.join(", ")
   }
+
   return (
     <div className="flex-initial overflow-auto h-full">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="text-4xl truncate">{playlistInfo.name}</h1>
+        <h1 className="text-4xl">{playlistInfo.name}</h1>
         {show ? (
           <h1
             className="text-sm text-slate-500 whitespace-nowrap cursor-pointer"
@@ -88,10 +90,19 @@ const Playlist = ({ show, setShow }: any) => {
             <th className="py-3 w-2/12">ALBUM</th>
           </tr>
         </thead>
+        {console.log(currentTrackId)}
         <tbody className="text-left text-slate-700">
           {playlistTracks?.items?.map(({ track }: any, key: any) => {
             return (
-              <tr key={key} onClick={() => playSong(track?.id, track?.uri)}>
+              <tr
+                key={key}
+                className={
+                  currentTrackId === track?.uri
+                    ? "bg-white py-1 rounded-lg"
+                    : ""
+                }
+                onClick={() => playSong(track?.id, track?.uri)}
+              >
                 <th className="py-3 w-1/12">{++key}</th>
                 <th className="py-3 w-4/12">
                   <div className="truncate w-40">{track?.name}</div>

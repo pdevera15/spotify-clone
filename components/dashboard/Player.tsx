@@ -8,7 +8,7 @@ import {
   VolumeUpIcon,
   VolumeOffIcon,
 } from "@heroicons/react/solid"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useSpotify } from "../../lib/spotify"
 import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
 import { useRecoilState, useRecoilValue } from "recoil"
@@ -18,15 +18,20 @@ const Player = () => {
   const [playState, setPlayState] = useRecoilState(isPlayingState)
   const currentTrackId = useRecoilValue(currentTrackIdState)
   const [songCurrentTime, setSongCurrentTime] = useState<String>()
-  // useEffect(() => {
-  //   if (spotifyApi.getAccessToken()) {
-  //     spotifyApi
-  //       .play()
-  //       .then(() => console.log("Playback Started"))
-  //       .catch((err: any) => console.log("Error", err))
-  //   }
-  // }, [])
+  const [volume, setVolume] = useState<number>(50)
+  useEffect(() => {
+    adjustVolumeHandler(volume)
+  }, [spotifyApi, volume])
 
+  const adjustVolumeHandler = useCallback((volume) => {
+    setTimeout(
+      () =>
+        spotifyApi
+          .setVolume(volume)
+          .then(() => console.log(`Volume set to ${volume}`)),
+      500
+    )
+  }, [])
   const playButtonHandler = (play: boolean) => {
     spotifyApi
       .getMyCurrentPlayingTrack()
@@ -79,20 +84,29 @@ const Player = () => {
             <FastForwardIcon className="h-5 w-5" />
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <div className="rounded-xl bg-[#f4f5ff] p-1">
-            <VolumeOffIcon className="h-5 w-5" />
+            <VolumeOffIcon
+              className="h-5 w-5"
+              onClick={() => volume > 0 && setVolume(volume - 10)}
+            />
           </div>
-          <div>------*-</div>
+          <div>
+            <input
+              type="range"
+              value={volume}
+              min={0}
+              max={100}
+              onChange={(e) => setVolume(Number(e.target.value))}
+            />
+          </div>
           <div className="rounded-xl bg-[#f4f5ff] p-1">
-            <VolumeUpIcon className="h-5 w-5" />
+            <VolumeUpIcon
+              className="h-5 w-5"
+              onClick={() => volume < 100 && setVolume(volume + 10)}
+            />
           </div>
         </div>
-      </div>
-      <div className="flex justify-between">
-        <div>00:00</div>
-
-        <div>99:99</div>
       </div>
     </div>
   )
