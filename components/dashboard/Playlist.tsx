@@ -46,7 +46,7 @@ const Playlist = ({ show, setShow }: any) => {
         .play({ uris: [uri] })
         .then(() => console.log("Song Play"))
         .then(() => setIsPlaying(true))
-        .catch((error: Error) => toast.error("No active devices found!"))
+        .catch((error: Error) => toast.error(`${error}`))
     }
   }
   const millisToMinutesAndSeconds = (millis: any) => {

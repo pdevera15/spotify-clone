@@ -43,20 +43,6 @@ const NavBar = () => {
       </div>
       <Login />
       <div className="my-8">Spotify Clone</div>
-      <div className="w-3/4">
-        <div className="flex gap-3 bg-black text-white p-3 rounded-lg">
-          <HomeIcon className="w-6 h-6" />
-          Home
-        </div>
-        <div className="flex gap-3 text-slate-500 p-3 rounded-lg">
-          <TrendingUpIcon className="w-6 h-6" />
-          Trending
-        </div>
-        <div className="flex gap-3 text-slate-500 p-3 rounded-lg">
-          <RssIcon className="w-6 h-6" />
-          Feed
-        </div>
-      </div>
       <div className="text-xs text-slate-500 p-3">My Playlist</div>
       <div className="flex flex-col text-slate-500">
         {playlist.map((playlist: any) => (

@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useSpotify } from "../../lib/spotify"
 import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
 import { useRecoilState, useRecoilValue } from "recoil"
+import toast from "react-hot-toast"
 
 const Player = () => {
   const spotifyApi = useSpotify()
@@ -23,15 +24,26 @@ const Player = () => {
     adjustVolumeHandler(volume)
   }, [spotifyApi, volume])
 
-  const adjustVolumeHandler = useCallback((volume) => {
-    setTimeout(
-      () =>
-        spotifyApi
-          .setVolume(volume)
-          .then(() => console.log(`Volume set to ${volume}`)),
-      500
-    )
-  }, [])
+  const adjustVolumeHandler = useCallback(
+    (volume) => {
+      setTimeout(
+        () =>
+          spotifyApi
+            .setVolume(volume)
+            .then(() => console.log(`Volume set to ${volume}`)),
+        500
+      )
+    },
+    [spotifyApi]
+  )
+
+  const nextSongHandler = () => {
+    console.log("next Song")
+    spotifyApi
+      .skipToNext()
+      .then(() => toast("Playing Next Song"))
+      .catch((error: Error) => toast.error(`${error}`))
+  }
   const playButtonHandler = (play: boolean) => {
     spotifyApi
       .getMyCurrentPlayingTrack()
@@ -81,7 +93,10 @@ const Player = () => {
           </div>
 
           <div className="rounded-xl bg-[#f4f5ff] p-1">
-            <FastForwardIcon className="h-5 w-5" />
+            <FastForwardIcon
+              onClick={() => nextSongHandler()}
+              className="h-5 w-5"
+            />
           </div>
         </div>
         <div className="flex gap-2 items-center">
