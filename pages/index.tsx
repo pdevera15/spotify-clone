@@ -3,7 +3,7 @@ import Dastboard from "../components/Dashboard"
 import NavBar from "../components/NavBar"
 import { Toaster } from "react-hot-toast"
 
-const Home: NextPage = ({ genres }: any) => {
+const Home: NextPage = () => {
   return (
     <div className="flex">
       <Toaster />

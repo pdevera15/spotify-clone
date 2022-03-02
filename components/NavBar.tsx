@@ -28,19 +28,12 @@ const NavBar = () => {
     }
   }, [data, spotifyApi])
 
-  const closehandler = (e: any) => {
-    setShow(!show)
-  }
-
   const highlighthandler = (id1: String, id2: String) => {
     return id1 === id2 ? " bg-black text-white" : ""
   }
 
   return (
     <div className={"h-screen w-72 p-4 overflow-auto"}>
-      <div className="flex flex-row-reverse">
-        <BackspaceIcon onClick={(e) => closehandler(e)} className="w-6 h-6" />
-      </div>
       <Login />
       <div className="my-8">Spotify Clone</div>
       <div className="text-xs text-slate-500 p-3">My Playlist</div>

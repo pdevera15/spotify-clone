@@ -5,7 +5,7 @@ import { selectedPlaylistState } from "../../atom/selectedPlaylistAtom"
 import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
 import toast from "react-hot-toast"
 
-const Playlist = ({ show, setShow }: any) => {
+const Playlist = () => {
   const [playlistTracks, setPlaylistTracks] = useState<any>({})
   const [playlistInfo, setPlaylistInfo] = useState<any>({})
   const spotifyApi = useSpotify()
@@ -17,26 +17,26 @@ const Playlist = ({ show, setShow }: any) => {
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi
-        .getPlaylistTracks(selectedPlaylist, { limit: 3 })
+        .getPlaylistTracks(selectedPlaylist, {})
         .then(({ body }: any) => {
           setPlaylistTracks(body)
         })
         .catch((e: any) => console.log(e))
       spotifyApi
-        .getPlaylist(selectedPlaylist, { limit: 5 })
+        .getPlaylist(selectedPlaylist, {})
         .then(({ body }: any) => {
           setPlaylistInfo(body)
         })
         .catch((e: any) => console.log(e))
     }
-    if (!show && spotifyApi.getAccessToken()) {
+    if (spotifyApi.getAccessToken()) {
       spotifyApi
         .getPlaylistTracks(selectedPlaylist, {})
         .then(({ body }: any) => {
           setPlaylistTracks(body)
         })
     }
-  }, [selectedPlaylist, spotifyApi, show])
+  }, [selectedPlaylist, spotifyApi])
 
   const playSong = (id: any, uri: any) => {
     console.log(id, uri)
@@ -46,7 +46,7 @@ const Playlist = ({ show, setShow }: any) => {
         .play({ uris: [uri] })
         .then(() => console.log("Song Play"))
         .then(() => setIsPlaying(true))
-        .catch((error: Error) => toast.error(`${error}`))
+        .catch((error: Error) => toast.error(`${error.message}`))
     }
   }
   const millisToMinutesAndSeconds = (millis: any) => {
@@ -69,16 +69,6 @@ const Playlist = ({ show, setShow }: any) => {
     <div className="flex-initial overflow-auto h-full">
       <div className="flex justify-between items-center gap-2">
         <h1 className="text-4xl">{playlistInfo.name}</h1>
-        {show ? (
-          <h1
-            className="text-sm text-slate-500 whitespace-nowrap cursor-pointer"
-            onClick={() => setShow()}
-          >
-            Show all
-          </h1>
-        ) : (
-          <></>
-        )}
       </div>
       <table className="table-fixed min-w-full border-collapse">
         <thead className="text-xs text-slate-500 text-left">

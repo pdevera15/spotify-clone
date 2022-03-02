@@ -13,6 +13,7 @@ import { useSpotify } from "../../lib/spotify"
 import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
 import { useRecoilState, useRecoilValue } from "recoil"
 import toast from "react-hot-toast"
+import { useSession } from "next-auth/react"
 
 const Player = () => {
   const spotifyApi = useSpotify()
@@ -20,19 +21,18 @@ const Player = () => {
   const currentTrackId = useRecoilValue(currentTrackIdState)
   const [songCurrentTime, setSongCurrentTime] = useState<String>()
   const [volume, setVolume] = useState<number>(50)
+  const { data, status } = useSession()
   useEffect(() => {
-    adjustVolumeHandler(volume)
-  }, [spotifyApi, volume])
+    data && spotifyApi.getAccessToken && adjustVolumeHandler(volume)
+  }, [volume])
 
   const adjustVolumeHandler = useCallback(
     (volume) => {
-      setTimeout(
-        () =>
-          spotifyApi
-            .setVolume(volume)
-            .then(() => console.log(`Volume set to ${volume}`)),
-        500
-      )
+      setTimeout(() => {
+        spotifyApi
+          .setVolume(volume)
+          .then(() => console.log(`Volume set to ${volume}`))
+      }, 500)
     },
     [spotifyApi]
   )
@@ -44,6 +44,15 @@ const Player = () => {
       .then(() => toast("Playing Next Song"))
       .catch((error: Error) => toast.error(`${error}`))
   }
+
+  const prevSongHandler = () => {
+    console.log("next Song")
+    spotifyApi
+      .skipToPrevious()
+      .then(() => toast("Playing Next Song"))
+      .catch((error: Error) => toast.error(`${error}`))
+  }
+
   const playButtonHandler = (play: boolean) => {
     spotifyApi
       .getMyCurrentPlayingTrack()
@@ -75,7 +84,7 @@ const Player = () => {
         </div>
         <div className="flex gap-2 items-center">
           <div className="rounded-xl bg-[#f4f5ff] p-1">
-            <RewindIcon className="h-5 w-5" />
+            <RewindIcon className="h-5 w-5" onClick={() => prevSongHandler()} />
           </div>
 
           <div className="rounded-xl bg-[#f4f5ff] p-1">
