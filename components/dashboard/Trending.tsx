@@ -5,7 +5,6 @@ const Trending = () => {
   const spotifyApi = useSpotify()
   const [trending, setTrending] = useState<any>({})
   useEffect(() => {
-    console.log("Access Token", spotifyApi.getAccessToken())
     if (spotifyApi.getAccessToken()) {
       spotifyApi
         .getFeaturedPlaylists({
@@ -17,7 +16,6 @@ const Trending = () => {
         })
     }
   }, [spotifyApi])
-  console.log(trending)
   return (
     <>
       <div>

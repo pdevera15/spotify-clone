@@ -39,7 +39,6 @@ const Playlist = () => {
   }, [selectedPlaylist, spotifyApi])
 
   const playSong = (id: any, uri: any) => {
-    console.log(id, uri)
     setCurrentTrackId(uri)
     if (spotifyApi.getAccessToken()) {
       spotifyApi
@@ -80,7 +79,6 @@ const Playlist = () => {
             <th className="py-3 w-2/12">ALBUM</th>
           </tr>
         </thead>
-        {console.log(currentTrackId)}
         <tbody className="text-left text-slate-700">
           {playlistTracks?.items?.map(({ track }: any, key: any) => {
             return (

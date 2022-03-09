@@ -29,9 +29,7 @@ const Player = () => {
   const adjustVolumeHandler = useCallback(
     (volume) => {
       setTimeout(() => {
-        spotifyApi
-          .setVolume(volume)
-          .then(() => console.log(`Volume set to ${volume}`))
+        spotifyApi.setVolume(volume).then()
       }, 500)
     },
     [spotifyApi]
@@ -46,7 +44,6 @@ const Player = () => {
   }
 
   const prevSongHandler = () => {
-    console.log("next Song")
     spotifyApi
       .skipToPrevious()
       .then(() => toast("Playing Next Song"))

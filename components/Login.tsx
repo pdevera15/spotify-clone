@@ -1,6 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react"
-import React, { useEffect } from "react"
-import { useSpotify } from "../lib/spotify"
+import React from "react"
+
 const Login = React.memo(function Login() {
   const { data, status } = useSession()
 

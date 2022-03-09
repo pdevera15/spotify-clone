@@ -21,11 +21,9 @@ const NavBar = () => {
   )
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken()) {
-      spotifyApi
-        .getUserPlaylists({ limit: 10 })
-        .then(({ body }: any) => setPlaylist(body?.items))
-    }
+    spotifyApi
+      .getUserPlaylists({ limit: 10 })
+      .then(({ body }: any) => setPlaylist(body?.items))
   }, [data, spotifyApi])
 
   const highlighthandler = (id1: String, id2: String) => {
