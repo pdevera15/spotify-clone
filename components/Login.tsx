@@ -7,9 +7,10 @@ const Login = React.memo(function Login() {
   return (
     <>
       {data && status === "authenticated" ? (
-        <div className="flex justify-between my-4 text-xs">
-          <span className="text-sm">Hi! {data?.user?.name}</span>
-          <a onClick={() => signOut()}>Logout</a>
+        <div className="my-4 text-xs">
+          <span className="text-sm">{data?.user?.name}</span>
+          <br />
+          <button onClick={() => signOut()}>Logout</button>
         </div>
       ) : (
         <button

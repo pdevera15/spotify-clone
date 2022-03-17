@@ -9,6 +9,9 @@ const nextConfig = {
       "lineup-images.scdn.co",
     ],
   },
+  experimental: {
+    esmExternals: false,
+  },
 }
 
 module.exports = nextConfig
