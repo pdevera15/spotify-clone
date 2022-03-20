@@ -22,8 +22,7 @@ const NavBar = () => {
   return (
     <div className={"h-screen w-96 p-4 overflow-auto"}>
       <Login />
-      <div className="my-8">Spotify Clone</div>
-      <div className="text-xs text-slate-500 p-3">My Playlist</div>
+      <div className="text-slate-500 p-3">My Playlist</div>
       <div className="flex flex-col text-slate-500">
         {playlist.map((playlist: any, index: string) => (
           <PlaylistList

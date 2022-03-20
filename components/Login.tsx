@@ -3,7 +3,7 @@ import React from "react"
 
 const Login = React.memo(function Login() {
   const { data, status } = useSession()
-
+  console.log(status)
   return (
     <>
       {data && status === "authenticated" ? (

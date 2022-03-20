@@ -46,26 +46,25 @@ const SongList = () => {
       <div className="flex justify-between items-center gap-2">
         <h1 className="text-4xl">{selectedPlaylist.playlistName}</h1>
       </div>
-      <div className="p-6">
-        <div className="flex flex-row justify-around w-100 text-sm">
-          <div className="flex-none w-16">#</div>
-          <div className="flex-none w-64">TITLE</div>
-          <div className="flex-auto">ALBUM</div>
-          <div className="flex-auto">DATE ADDED</div>
-          <div className="flex-auto">TIME</div>
-        </div>
-        {playlistTracks.map((song: any, index: number) => (
-          <Song
-            key={index + 1}
-            trackNumber={index + 1}
-            title={song.track.name}
-            artists={song.track.artists}
-            duration_ms={song.track.duration_ms}
-            album={song.track.album.name}
-            date_added={song.added_at}
-          />
-        ))}
+      <div className="flex flex-row justify-around w-100 text-sm h-12 items-center">
+        <div className="flex justify-center flex-none w-16">#</div>
+        <div className="flex-none w-64">TITLE</div>
+        <div className="flex-auto w-64">ALBUM</div>
+        <div className="flex-auto w-64">DATE ADDED</div>
+        <div className="flex-auto w-64">TIME</div>
       </div>
+      {playlistTracks.map((song: any, index: number) => (
+        <Song
+          key={index + 1}
+          trackNumber={index + 1}
+          title={song.track?.name}
+          artists={song.track?.artists}
+          duration_ms={song.track?.duration_ms}
+          album={song.track?.album?.name}
+          date_added={song.added_at}
+          uri={song.track?.uri}
+        />
+      ))}
     </div>
   )
 }
