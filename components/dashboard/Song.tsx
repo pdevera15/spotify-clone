@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useState } from "react"
+import React, { Key } from "react"
 import toast from "react-hot-toast"
 import { spotifyApi } from "../../lib/spotify"
 import { useSetRecoilState } from "recoil"

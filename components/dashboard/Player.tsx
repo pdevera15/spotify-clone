@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/solid"
 import { useCallback, useEffect, useState } from "react"
 import { useSpotify } from "../../lib/spotify"
-import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
+import { currentTrackIdState, isPlayingState } from "../../atom/SongAtom"
 import { useRecoilState, useRecoilValue } from "recoil"
 import toast from "react-hot-toast"
 import { useSession } from "next-auth/react"

@@ -2,7 +2,7 @@ import { Key, useEffect, useState } from "react"
 import { useSpotify } from "../../lib/spotify"
 import { useRecoilValue, useRecoilState } from "recoil"
 import { selectedPlaylistState } from "../../atom/PlaylistAtom"
-import { currentTrackIdState, isPlayingState } from "../../atom/songAtom"
+import { currentTrackIdState, isPlayingState } from "../../atom/SongAtom"
 import toast from "react-hot-toast"
 import Song from "./Song"
 
